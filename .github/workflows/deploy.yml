@@ -1,0 +1,62 @@
+name: Déploiement en production
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [labeled]
+
+jobs:
+  deploy:
+    if: ${{ github.event.label.name == 'deploy' && github.actor == 'AdrienGuillement' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: back-deploy
+          message: |
+            Déploiement de back...
+
+      - name: run ansible back
+        id: ansible-back
+        uses: adrienguillement/action-ssh@master
+        with:
+          hosts: ${{ secrets.USER_HOST }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: cd /ansible-poc && ansible-playbook -i 'back,' -v deploy_master.yml
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: back-deploy
+          message: |
+            Back déployé.
+            ```
+            ${{ steps.ansible-back.outputs.ssh-output }}
+            ```
+  
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: front-deploy
+          message: |
+            Déploiement de front...
+
+      - name: run ansible back
+        id: ansible-front
+        uses: adrienguillement/action-ssh@master
+        with:
+          hosts: ${{ secrets.USER_HOST }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: cd /ansible-poc && ansible-playbook -i 'back,' -v deploy_master.yml
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: front-deploy
+          message: |
+            Front déployé
+            ```
+            ${{ steps.ansible-front.outputs.ssh-output }}
+            ```

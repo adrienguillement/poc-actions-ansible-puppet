@@ -1,0 +1,12 @@
+---
+- name: Run puppet agent
+  hosts: all
+  remote_user: ansible
+
+  tasks:
+    - name: puppet deploy
+      become: yes
+      become_user: root
+      shell: puppet agent --test --color=false
+      register: result
+      failed_when: ( result.rc not in [ 0, 2 ] )

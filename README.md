@@ -5,3 +5,4 @@ Github action ---trigger---> Ansible script ---execute on remote---> Puppet agen
 
 Also use this fork to execute ansible and retrieve logs : https://github.com/adrienguillement/action-ssh
 
+

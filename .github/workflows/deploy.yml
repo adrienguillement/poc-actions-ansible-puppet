@@ -24,7 +24,7 @@ jobs:
         with:
           hosts: ${{ secrets.USER_HOST }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
-          command: cd /ansible-poc && ansible-playbook -i 'back,' -v deploy_master.yml
+          command: ls / #cd /ansible-poc && ansible-playbook -i 'back,' -v deploy_master.yml
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
